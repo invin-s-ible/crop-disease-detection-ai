@@ -1,0 +1,144 @@
+:root {
+  --ag-green: #2e7d32;
+  --ag-green-dark: #1b5e20;
+  --ag-green-light: #e8f5e9;
+  --ag-accent: #66bb6a;
+  --ag-earth: #6d4c41;
+}
+
+body {
+  background: linear-gradient(180deg, #f4f9f4 0%, #ffffff 220px);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #223022;
+}
+
+.app-navbar {
+  background: linear-gradient(90deg, var(--ag-green-dark), var(--ag-green));
+}
+.app-navbar .nav-link { color: rgba(255,255,255,0.85); }
+.app-navbar .nav-link.active, .app-navbar .nav-link:hover { color: #fff; font-weight: 600; }
+.app-navbar .navbar-brand { color: #fff; }
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--ag-green-dark), var(--ag-green) 55%, var(--ag-accent));
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  max-width: 460px;
+  width: 100%;
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+.auth-card .card-header {
+  background: var(--ag-green-dark);
+  color: #fff;
+  text-align: center;
+  padding: 2rem 1.5rem 1.5rem;
+  border: none;
+}
+
+.auth-card .card-header i { font-size: 2.4rem; }
+
+.btn-primary, .btn-ag {
+  background-color: var(--ag-green);
+  border-color: var(--ag-green);
+}
+.btn-primary:hover, .btn-ag:hover {
+  background-color: var(--ag-green-dark);
+  border-color: var(--ag-green-dark);
+}
+
+.card {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.stat-card {
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card i.bg-icon {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  font-size: 4.5rem;
+  opacity: 0.18;
+}
+.stat-card.bg-green { background: linear-gradient(135deg, var(--ag-green), var(--ag-green-dark)); }
+.stat-card.bg-blue { background: linear-gradient(135deg, #1e88e5, #1565c0); }
+.stat-card.bg-orange { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
+.stat-card.bg-purple { background: linear-gradient(135deg, #8e24aa, #6a1b9a); }
+.stat-card .stat-value { font-size: 2rem; font-weight: 700; }
+.stat-card .stat-label { opacity: 0.9; font-size: 0.9rem; }
+
+.section-title {
+  color: var(--ag-green-dark);
+  font-weight: 700;
+}
+
+.badge-severity-mild { background-color: #ffe082; color: #6d4c00; }
+.badge-severity-moderate { background-color: #ffab91; color: #6d1f00; }
+.badge-severity-severe { background-color: #ef9a9a; color: #7a0000; }
+.badge-severity-none { background-color: var(--ag-green-light); color: var(--ag-green-dark); }
+
+.upload-dropzone {
+  border: 2px dashed var(--ag-accent);
+  border-radius: 14px;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  background: var(--ag-green-light);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  background: #d7ecd8;
+}
+.upload-dropzone i { font-size: 2.8rem; color: var(--ag-green); }
+
+#imagePreview {
+  max-height: 320px;
+  border-radius: 12px;
+  display: none;
+  margin: 1rem auto;
+}
+
+.result-hero {
+  border-radius: 16px;
+  padding: 2rem;
+}
+.result-hero.healthy { background: var(--ag-green-light); border: 1px solid #a5d6a7; }
+.result-hero.diseased { background: #fff3e0; border: 1px solid #ffcc80; }
+
+.disease-card { border-left: 5px solid var(--ag-green); height: 100%; }
+.disease-card.type-fungal { border-left-color: #8d6e63; }
+.disease-card.type-bacterial { border-left-color: #e53935; }
+.disease-card.type-viral { border-left-color: #8e24aa; }
+.disease-card.type-pest { border-left-color: #fb8c00; }
+.disease-card.type-nutrient-deficiency { border-left-color: #1e88e5; }
+
+.table thead { background-color: var(--ag-green-light); }
+
+.spinner-overlay {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+}
+
+.landing-hero {
+  background: linear-gradient(135deg, var(--ag-green-dark), var(--ag-green));
+  color: #fff;
+  border-radius: 18px;
+  padding: 3rem 2rem;
+}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="card auth-card">
+    <div class="card-header">
+      <i class="fa-solid fa-seedling"></i>
+      <h3 class="mt-2 mb-0">AgriGuard AI</h3>
+      <p class="mb-0 small">AI-Based Crop Disease Detection</p>
+    </div>
+    <div class="card-body p-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+            <input type="text" name="username" class="form-control" required autofocus>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ag w-100 text-white py-2 fw-semibold">
+          <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+        </button>
+      </form>
+      <p class="text-center mt-3 mb-0">
+        Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

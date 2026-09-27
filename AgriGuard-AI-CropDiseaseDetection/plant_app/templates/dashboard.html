@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="section-title mb-0">Welcome back, {{ user.full_name }} 👋</h2>
+    <p class="text-muted mb-0">Here's an overview of your crop health monitoring.</p>
+  </div>
+  <a href="{{ url_for('test_image') }}" class="btn btn-ag text-white"><i class="fa-solid fa-camera me-1"></i>New Scan</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-green">
+      <i class="fa-solid fa-image bg-icon"></i>
+      <div class="stat-value">{{ total_images }}</div>
+      <div class="stat-label">Image Scans</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-blue">
+      <i class="fa-solid fa-temperature-half bg-icon"></i>
+      <div class="stat-value">{{ total_tests }}</div>
+      <div class="stat-label">Sensor Tests</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-orange">
+      <i class="fa-solid fa-brain bg-icon"></i>
+      <div class="stat-value">{{ trained_models }}</div>
+      <div class="stat-label">Trained Models</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-purple">
+      <i class="fa-solid fa-heart-pulse bg-icon"></i>
+      <div class="stat-value">{{ healthy_results }}</div>
+      <div class="stat-label">Healthy Readings</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-pie me-1 text-success"></i>Leaf Scan Outcomes</h6>
+        <canvas id="healthPieChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-column me-1 text-success"></i>Detected Disease Types</h6>
+        <canvas id="diseaseTypeChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold mb-0"><i class="fa-solid fa-leaf me-1 text-success"></i>Recent Leaf Scans</h6>
+          <a href="{{ url_for('results') }}" class="small">View all</a>
+        </div>
+        {% if recent_images %}
+        <ul class="list-group list-group-flush">
+          {% for img in recent_images %}
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <div>
+              <div class="fw-semibold">{{ img.disease_name or 'Healthy Leaf' }}</div>
+              <div class="small text-muted">{{ img.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+            </div>
+            <a href="{{ url_for('image_results', image_id=img.id) }}" class="btn btn-sm btn-outline-success">View</a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted small mb-0">No image scans yet. <a href="{{ url_for('test_image') }}">Run your first scan</a>.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold mb-0"><i class="fa-solid fa-temperature-half me-1 text-success"></i>Recent Sensor Tests</h6>
+          <a href="{{ url_for('results') }}" class="small">View all</a>
+        </div>
+        {% if recent_tests %}
+        <ul class="list-group list-group-flush">
+          {% for t in recent_tests %}
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <div>
+              <div class="fw-semibold">{{ 'Healthy' if t.is_healthy else 'At Risk' }}</div>
+              <div class="small text-muted">{{ t.temperature }}°C · {{ t.humidity }}% RH · {{ t.created_at.strftime('%d %b %Y') }}</div>
+            </div>
+            <a href="{{ url_for('test_results', result_id=t.id) }}" class="btn btn-sm btn-outline-success">View</a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted small mb-0">No sensor tests yet. <a href="{{ url_for('train_model') }}">Train a model</a> first.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch("{{ url_for('disease_stats') }}")
+  .then(r => r.json())
+  .then(data => {
+    new Chart(document.getElementById('healthPieChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Healthy', 'Disease Detected'],
+        datasets: [{ data: [data.healthy_count, data.diseased_count], backgroundColor: ['#2e7d32', '#ef6c00'] }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById('diseaseTypeChart'), {
+      type: 'bar',
+      data: {
+        labels: data.type_labels.length ? data.type_labels : ['No data yet'],
+        datasets: [{ label: 'Occurrences', data: data.type_values.length ? data.type_values : [0], backgroundColor: '#66bb6a' }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+    });
+  })
+  .catch(() => {});
+</script>
+{% endblock %}

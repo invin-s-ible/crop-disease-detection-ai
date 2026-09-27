@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}All Results{% endblock %}
+{% block content %}
+
+<h2 class="section-title mb-4"><i class="fa-solid fa-chart-line me-2"></i>All Results</h2>
+
+<ul class="nav nav-tabs mb-3" id="resultTabs" role="tablist">
+  <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#imgTab" type="button">
+    <i class="fa-solid fa-leaf me-1"></i>Leaf Scans ({{ image_results|length }})</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#sensorTab" type="button">
+    <i class="fa-solid fa-temperature-half me-1"></i>Sensor Tests ({{ test_results|length }})</button></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="imgTab">
+    {% if image_results %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle bg-white">
+        <thead><tr><th>Date</th><th>Result</th><th>Type</th><th>Severity</th><th>Confidence</th><th></th></tr></thead>
+        <tbody>
+          {% for img in image_results %}
+          <tr>
+            <td>{{ img.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+            <td>{{ img.disease_name or 'Healthy' }}</td>
+            <td>{{ img.disease_type or '-' }}</td>
+            <td><span class="badge badge-severity-{{ img.severity or 'none' }}">{{ img.severity or 'none' }}</span></td>
+            <td>{{ '%.1f'|format(img.confidence or 0) }}%</td>
+            <td><a href="{{ url_for('image_results', image_id=img.id) }}" class="btn btn-sm btn-outline-success">View</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No leaf scans yet. <a href="{{ url_for('test_image') }}">Run your first scan</a>.</p>
+    {% endif %}
+  </div>
+
+  <div class="tab-pane fade" id="sensorTab">
+    {% if test_results %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle bg-white">
+        <thead><tr><th>Date</th><th>Temp</th><th>Humidity</th><th>Soil</th><th>Light</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {% for t in test_results %}
+          <tr>
+            <td>{{ t.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+            <td>{{ t.temperature }}°C</td>
+            <td>{{ t.humidity }}%</td>
+            <td>{{ t.soil_moisture }}%</td>
+            <td>{{ t.light_intensity }}</td>
+            <td><span class="badge {{ 'bg-success' if t.is_healthy else 'bg-warning text-dark' }}">{{ 'Healthy' if t.is_healthy else 'At Risk' }}</span></td>
+            <td><a href="{{ url_for('test_results', result_id=t.id) }}" class="btn btn-sm btn-outline-success">View</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No sensor tests yet. <a href="{{ url_for('test_sensors') }}">Run a sensor check</a>.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Disease Library{% endblock %}
+{% block content %}
+
+<h2 class="section-title mb-1"><i class="fa-solid fa-book-medical me-2"></i>Crop Disease Library</h2>
+<p class="text-muted mb-4">A quick reference for common crop diseases, their causes, and preventive measures.</p>
+
+<div class="row g-3">
+  {% for d in diseases %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card disease-card type-{{ d.type|lower|replace(' ', '-') }}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="fw-bold mb-0">{{ d.name }}</h5>
+          <span class="badge bg-light text-dark border">{{ d.type }}</span>
+        </div>
+        <p class="small text-muted mb-2"><i class="fa-solid fa-wheat-awn me-1"></i>Common in: {{ d.crops }}</p>
+
+        <p class="fw-semibold small mb-1">Symptoms</p>
+        <ul class="small mb-2">{% for s in d.symptoms %}<li>{{ s }}</li>{% endfor %}</ul>
+
+        <p class="fw-semibold small mb-1">Prevention</p>
+        <ul class="small mb-0">{% for p in d.prevention %}<li>{{ p }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="alert alert-light border mt-4 small">
+  <i class="fa-solid fa-circle-info text-success me-1"></i>
+  This library is a general reference. For a diagnosis specific to your plant, use <a href="{{ url_for('test_image') }}">AI Crop Disease Detection</a>.
+</div>
+
+{% endblock %}

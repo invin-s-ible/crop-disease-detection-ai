@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Scan Result{% endblock %}
+{% block content %}
+
+{% set symptoms = result.symptoms | fromjson %}
+{% set causes = result.possible_causes | fromjson %}
+{% set treatment = result.treatment | fromjson %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+
+    <div class="result-hero {{ 'diseased' if result.disease_detected else 'healthy' }} mb-4 text-center">
+      <i class="fa-solid {{ 'fa-triangle-exclamation text-warning' if result.disease_detected else 'fa-circle-check text-success' }} fa-3x mb-3"></i>
+      <h3 class="mb-1">
+        {% if result.disease_type == 'invalid_image' %}
+          Not a Leaf Image
+        {% elif result.disease_type == 'inconclusive' %}
+          Inconclusive Result
+        {% elif result.disease_detected %}
+          {{ result.disease_name or 'Disease Detected' }}
+        {% else %}
+          Healthy Leaf
+        {% endif %}
+      </h3>
+      {% if result.disease_type and result.disease_type not in ['invalid_image', 'inconclusive'] %}
+      <span class="badge text-uppercase badge-severity-{{ result.severity or 'none' }} px-3 py-2">
+        {{ result.disease_type }} &middot; {{ result.severity or 'none' }} severity
+      </span>
+      {% endif %}
+      <div class="text-muted small mt-2">Confidence: {{ '%.1f'|format(result.confidence or 0) }}% &middot; {{ result.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="fw-bold text-success"><i class="fa-solid fa-stethoscope me-1"></i>Symptoms Observed</h6>
+            {% if symptoms %}
+            <ul class="mb-0">
+              {% for s in symptoms %}<li>{{ s }}</li>{% endfor %}
+            </ul>
+            {% else %}<p class="text-muted small mb-0">No symptoms reported.</p>{% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="fw-bold text-warning"><i class="fa-solid fa-circle-question me-1"></i>Possible Causes</h6>
+            {% if causes %}
+            <ul class="mb-0">
+              {% for c in causes %}<li>{{ c }}</li>{% endfor %}
+            </ul>
+            {% else %}<p class="text-muted small mb-0">No causes reported.</p>{% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold text-primary"><i class="fa-solid fa-hand-holding-medical me-1"></i>Recommended Treatment &amp; Prevention</h6>
+            {% if treatment %}
+            <ul class="mb-0">
+              {% for t in treatment %}<li>{{ t }}</li>{% endfor %}
+            </ul>
+            {% else %}<p class="text-muted small mb-0">No treatment recommendations available.</p>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% if result.notes %}
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold"><i class="fa-solid fa-note-sticky me-1"></i>Your Notes</h6>
+            <p class="mb-0">{{ result.notes }}</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <a href="{{ url_for('test_image') }}" class="btn btn-ag text-white"><i class="fa-solid fa-camera me-1"></i>Scan Another Leaf</a>
+      <a href="{{ url_for('results') }}" class="btn btn-outline-secondary">View All Results</a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

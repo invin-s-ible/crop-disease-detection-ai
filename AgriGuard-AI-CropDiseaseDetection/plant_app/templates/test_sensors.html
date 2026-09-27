@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sensor Check{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h2 class="section-title mb-1"><i class="fa-solid fa-temperature-half me-2"></i>Sensor-Based Health Check</h2>
+    <p class="text-muted mb-4">Enter current environmental readings to predict plant health using your trained models.</p>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="POST" action="{{ url_for('test_sensors') }}">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Temperature (°C)</label>
+              <input type="number" step="0.1" name="temperature" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Humidity (%)</label>
+              <input type="number" step="0.1" name="humidity" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Soil Moisture (%)</label>
+              <input type="number" step="0.1" name="soil_moisture" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Light Intensity (lux)</label>
+              <input type="number" step="0.1" name="light_intensity" class="form-control" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Notes <span class="text-muted small">(optional)</span></label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn btn-ag w-100 text-white py-2 fw-semibold">
+            <i class="fa-solid fa-magnifying-glass-chart me-1"></i>Predict Health Status
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

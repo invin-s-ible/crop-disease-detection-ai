@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Training Results{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h2 class="section-title mb-1"><i class="fa-solid fa-chart-simple me-2"></i>Model Training Results</h2>
+    <p class="text-muted mb-4">Trained on <strong>{{ training.filename }}</strong> &middot; {{ training.rows_processed }} rows &middot; {{ training.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-tree me-1"></i>{{ training.model1_name }}</h5>
+            <table class="table table-sm mb-0">
+              <tr><td>Accuracy</td><td class="text-end fw-semibold">{{ '%.1f'|format(training.model1_accuracy*100) }}%</td></tr>
+              <tr><td>Precision</td><td class="text-end">{{ '%.1f'|format(training.model1_precision*100) }}%</td></tr>
+              <tr><td>Recall</td><td class="text-end">{{ '%.1f'|format(training.model1_recall*100) }}%</td></tr>
+              <tr><td>F1 Score</td><td class="text-end">{{ '%.1f'|format(training.model1_f1*100) }}%</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-vector-square me-1"></i>{{ training.model2_name }}</h5>
+            <table class="table table-sm mb-0">
+              <tr><td>Accuracy</td><td class="text-end fw-semibold">{{ '%.1f'|format(training.model2_accuracy*100) }}%</td></tr>
+              <tr><td>Precision</td><td class="text-end">{{ '%.1f'|format(training.model2_precision*100) }}%</td></tr>
+              <tr><td>Recall</td><td class="text-end">{{ '%.1f'|format(training.model2_recall*100) }}%</td></tr>
+              <tr><td>F1 Score</td><td class="text-end">{{ '%.1f'|format(training.model2_f1*100) }}%</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Accuracy Comparison</h6>
+            <canvas id="compareChart" height="120"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <a href="{{ url_for('test_sensors') }}" class="btn btn-ag text-white"><i class="fa-solid fa-vial me-1"></i>Test With New Readings</a>
+      <a href="{{ url_for('train_model') }}" class="btn btn-outline-secondary">Train Another Model</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+new Chart(document.getElementById('compareChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score'],
+    datasets: [
+      { label: '{{ training.model1_name }}', backgroundColor: '#2e7d32',
+        data: [{{ training.model1_accuracy*100 }}, {{ training.model1_precision*100 }}, {{ training.model1_recall*100 }}, {{ training.model1_f1*100 }}] },
+      { label: '{{ training.model2_name }}', backgroundColor: '#1e88e5',
+        data: [{{ training.model2_accuracy*100 }}, {{ training.model2_precision*100 }}, {{ training.model2_recall*100 }}, {{ training.model2_f1*100 }}] }
+    ]
+  },
+  options: { scales: { y: { beginAtZero: true, max: 100 } } }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="card auth-card" style="max-width:560px;">
+    <div class="card-header">
+      <i class="fa-solid fa-leaf"></i>
+      <h3 class="mt-2 mb-0">Create Account</h3>
+      <p class="mb-0 small">Join AgriGuard AI</p>
+    </div>
+    <div class="card-body p-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="POST" action="{{ url_for('register') }}">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="full_name" class="form-control" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Phone</label>
+            <input type="tel" name="phone" class="form-control" required>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Location (Farm / City)</label>
+          <input type="text" name="location" class="form-control" required>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required minlength="6">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirm_password" class="form-control" required minlength="6">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ag w-100 text-white py-2 fw-semibold">
+          <i class="fa-solid fa-user-plus me-1"></i> Register
+        </button>
+      </form>
+      <p class="text-center mt-3 mb-0">
+        Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

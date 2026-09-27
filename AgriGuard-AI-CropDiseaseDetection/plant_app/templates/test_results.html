@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Sensor Test Result{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+
+    <div class="result-hero {{ 'healthy' if result.is_healthy else 'diseased' }} mb-4 text-center">
+      <i class="fa-solid {{ 'fa-circle-check text-success' if result.is_healthy else 'fa-triangle-exclamation text-warning' }} fa-3x mb-3"></i>
+      <h3 class="mb-1">{{ 'Plant Appears Healthy' if result.is_healthy else 'Plant May Be At Risk' }}</h3>
+      <div class="text-muted small mt-2">{{ result.created_at.strftime('%d %b %Y, %I:%M %p') }}</div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="fw-bold mb-3">Sensor Readings</h6>
+        <div class="row text-center g-3">
+          <div class="col-3"><div class="fw-bold">{{ result.temperature }}°C</div><div class="small text-muted">Temp</div></div>
+          <div class="col-3"><div class="fw-bold">{{ result.humidity }}%</div><div class="small text-muted">Humidity</div></div>
+          <div class="col-3"><div class="fw-bold">{{ result.soil_moisture }}%</div><div class="small text-muted">Soil</div></div>
+          <div class="col-3"><div class="fw-bold">{{ result.light_intensity }}</div><div class="small text-muted">Light (lux)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="fw-bold text-success">Random Forest Prediction</h6>
+            <p class="mb-1">{{ result.model1_prediction }}</p>
+            <span class="badge bg-success">{{ '%.1f'|format(result.model1_confidence or 0) }}% confidence</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h6 class="fw-bold text-primary">SVM Prediction</h6>
+            <p class="mb-1">{{ result.model2_prediction }}</p>
+            <span class="badge bg-primary">{{ '%.1f'|format(result.model2_confidence or 0) }}% confidence</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if result.notes %}
+    <div class="card mt-3">
+      <div class="card-body">
+        <h6 class="fw-bold">Notes</h6>
+        <p class="mb-0">{{ result.notes }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mt-4">
+      <a href="{{ url_for('test_sensors') }}" class="btn btn-ag text-white">Run Another Test</a>
+      <a href="{{ url_for('results') }}" class="btn btn-outline-secondary">View All Results</a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

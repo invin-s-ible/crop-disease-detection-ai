@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Detect Disease{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h2 class="section-title mb-1"><i class="fa-solid fa-camera-retro me-2"></i>AI Crop Disease Detection</h2>
+    <p class="text-muted mb-4">Upload a photo of a plant leaf. Our AI vision model will identify the disease, its severity, and recommend treatment.</p>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form id="imageUploadForm" action="{{ url_for('test_image') }}" method="POST" enctype="multipart/form-data">
+          <div id="uploadDropzone" class="upload-dropzone mb-3">
+            <i class="fa-solid fa-cloud-arrow-up d-block mb-2"></i>
+            <p class="mb-1 fw-semibold">Click to upload or drag & drop a leaf photo</p>
+            <p class="text-muted small mb-0">PNG, JPG or WEBP &middot; up to 16MB</p>
+            <input type="file" id="image_file" name="image_file" accept="image/png,image/jpeg,image/webp" class="d-none" required>
+          </div>
+          <img id="imagePreview" class="img-fluid mx-auto d-block" alt="Preview">
+
+          <div class="mb-3">
+            <label class="form-label">Notes <span class="text-muted small">(optional)</span></label>
+            <textarea name="notes" class="form-control" rows="2" placeholder="E.g. tomato plant, week 3, outdoor field..."></textarea>
+          </div>
+
+          <div id="uploadError" class="alert alert-danger py-2" style="display:none;"></div>
+
+          <div id="analyzeSpinner" class="spinner-overlay">
+            <div class="spinner-border text-success" role="status"></div>
+            <p class="text-muted small mt-2 mb-0">Analyzing image with AI vision model...</p>
+          </div>
+
+          <button type="submit" id="analyzeBtn" class="btn btn-ag w-100 text-white py-2 fw-semibold">
+            <i class="fa-solid fa-magnifying-glass me-1"></i><span>Analyze Leaf Image</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="alert alert-light border mt-3 small">
+      <i class="fa-solid fa-circle-info text-success me-1"></i>
+      Tip: for best accuracy, take the photo in daylight with the leaf filling most of the frame.
+    </div>
+  </div>
+</div>
+
+{% endblock %}
